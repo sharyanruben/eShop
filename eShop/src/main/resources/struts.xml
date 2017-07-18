@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <package name="main" namespace="/" extends="struts-default">
+
+
+        <result-types>
+            <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult"/>
+            <result-type name="imageResult" class="customresult.CustomImageBytesResult"/>
+        </result-types>
+
+        <interceptors>
+            <interceptor name="authentication" class="controller.AuthenticationInterceptor"/>
+            <interceptor-stack name="authenticationStack">
+                <interceptor-ref name="authentication"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+
+        <default-interceptor-ref name="defaultStack"/>
+
+        <global-results>
+            <result name="login" type="redirect">view.action</result>
+            <result name="error">/WEB-INF/pages/error.jsp</result>
+        </global-results>
+
+        <action name="admin" class="action.AdminAction">
+            <result name="success">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+        <action name="home" class="action.HomeAction">
+            <result name="success" type="tiles">home.view</result>
+        </action>
+        <!--products action-->
+        <action name="products" class="action.ProductsAction">
+            <result name="success" type="tiles">products.view</result>
+        </action>
+        <action name="productsById" class="action.ProductsAction" method="getProductsByCatId">
+            <result name="success" type="tiles">products.view</result>
+        </action>
+        <action name="productsByIdAdmin" class="action.ProductsAction" method="getProductsByCatId">
+            <result name="success">/WEB-INF/pages/productsResult.jsp</result>
+        </action>
+        <action name="deleteProduct" class="action.ProductsAction" method="delete">
+            <result name="success">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+        <action name="viewProduct" class="action.ProductsAction" method="view">
+            <result name="success">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+        <action name="updateProduct" class="action.ProductsAction" method="update">
+            <result name="success">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+        <action name="productDetails" class="action.ProductsAction" method="getProductsDetails">
+            <result name="success" type="tiles">productDetails.view</result>
+        </action>
+        <action name="productsByBrandId" class="action.ProductsAction" method="getProductsByBrandId">
+            <result name="success" type="tiles">products.view</result>
+        </action>
+        <action name="productsByPrice" class="action.ProductsAction" method="getProductsByPrice">
+            <result name="success" type="tiles">products.view</result>
+        </action>
+
+        <action name="search" class="action.ProductsAction" method="search">
+            <result name="success">/WEB-INF/pages/searchResult.jsp</result>
+        </action>
+
+        <action name="addProduct" class="action.ProductsAction" method="addProduct">
+            <result name="success" type="redirect">admin.action</result>
+            <result name="input">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+        <!--commons actions-->
+        <action name="checkoutView" class="action.CheckOutAction" method="view">
+            <result name="success" type="tiles">checkout.view</result>
+        </action>
+        <action name="checkout" class="action.CheckOutAction">
+            <interceptor-ref name="authenticationStack"/>
+            <result name="success" type="tiles">checkout.view</result>
+        </action>
+
+        <action name="showImage" class="action.ImageAction">
+            <result name="success" type="imageResult"></result>
+        </action>
+
+        <action name="cart" class="action.CartAction">
+            <interceptor-ref name="authenticationStack"/>
+            <result name="success" type="tiles">cart.view</result>
+        </action>
+
+        <action name="addToCart" class="action.CartAction" method="addToCart">
+            <interceptor-ref name="authenticationStack"/>
+            <result name="success" type="redirect">cart.action</result>
+        </action>
+
+        <action name="deleteCart" class="action.CartAction" method="deleteFromCart">
+            <interceptor-ref name="authenticationStack"/>
+            <result name="success" type="redirect">cart.action</result>
+        </action>
+
+        <!--login actions-->
+        <action name="view" class="action.LoginAction" method="view">
+            <result name="success" type="tiles">login.view</result>
+        </action>
+
+        <action name="register" class="action.LoginAction" method="register">
+            <result name="success" type="tiles">home.view</result>
+            <result name="input" type="tiles">login.view</result>
+        </action>
+
+        <action name="login" class="action.LoginAction" method="login">
+            <result name="admin" type="redirect">admin.action</result>
+            <result name="user" type="redirect">home.action</result>
+            <result name="input" type="tiles">login.view</result>
+        </action>
+
+        <action name="logout" class="action.LogoutAction">
+            <result name="success" type="redirect">home.action</result>
+        </action>
+        <!--brand actions-->
+        <action name="addBrand" class="action.BrandAction" method="addBrand">
+            <result name="success" type="redirect">admin.action</result>
+            <result name="input">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+        <action name="deleteBrand" class="action.BrandAction" method="delete">
+            <result name="success" type="redirect">admin.action</result>
+        </action>
+
+        <action name="viewBrand" class="action.BrandAction" method="view">
+            <result name="success">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+        <action name="updateBrand" class="action.BrandAction" method="update">
+            <result name="success" type="redirect">admin.action</result>
+            <result name="input">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+        <!--wish list actions-->
+
+        <action name="addToWhishList" class="action.WishListAction" method="addToWishList">
+            <interceptor-ref name="authenticationStack"/>
+            <result name="success" type="redirect">products.action</result>
+        </action>
+
+        <action name="viewWishList" class="action.WishListAction" method="viewWishList">
+            <interceptor-ref name="authenticationStack"/>
+            <result name="success" type="tiles">wishList.view</result>
+        </action>
+
+        <action name="deleteFromWishList" class="action.WishListAction" method="deleteFromWishList">
+            <result name="success" type="redirect">viewWishList.action</result>
+
+        </action>
+
+        <!--contact action-->
+        <action name="viewContact" class="action.ContactAction" method="viewContact">
+            <result name="success" type="tiles">contact.view</result>
+        </action>
+        <action name="sendEmail" class="action.ContactAction" method="sendEmail">
+            <result name="success" type="tiles">contact.view</result>
+        </action>
+        <!--category action-->
+        <action name="addCategory" class="action.CategoryAction" method="addCategory">
+            <result name="success" type="redirect">admin.action</result>
+            <result name="input">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+        <action name="deleteCategory" class="action.CategoryAction" method="delete">
+            <result name="success" type="redirect">admin.action</result>
+        </action>
+
+        <action name="viewCategory" class="action.CategoryAction" method="view">
+            <result name="success">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+        <action name="updateCategory" class="action.CategoryAction" method="update">
+            <result name="success" type="redirect">admin.action</result>
+            <result name="input">/WEB-INF/pages/admin.jsp</result>
+        </action>
+
+    </package>
+
+</struts>
